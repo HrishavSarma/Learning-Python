@@ -1,14 +1,14 @@
 # Format Specifiers -> {value:flags} format a value based on what
 #                      flags are inserted
 #                      is used with f strings
-# {value,.2f}
-# {value,,}
-# {value,010}
-# {value,^}
-# {value,>}
-# {value,<}
-# {value,+} or {value, }
-# {value,=}
+# {value:.2f}
+# {value:,}
+# {value:010}
+# {value:^}
+# {value:>}
+# {value:<}
+# {value:+} or {value, }
+# {value:=}
 
 price1 = 1222.99
 price2 = -1000.764
