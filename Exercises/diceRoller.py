@@ -1,39 +1,7 @@
-# Dictionary = a collection of {key:value} pairs
-#              ordered and changeable. No duplicates
+# Python Dice Roller
+import random
 
-capitals = {"France": "Paris",
-            "Japan" : "Tokyo",
-            "India" : "New Delhi",
-            "Australia" : "Canberra",
-            "Canada" : "Ottawa"}
-
-#print(capitals.get("India"))
-#print(capitals.get("America"))
-# if capitals.get("India"):
-#     print("Capital exist")
-# else:
-#     print("Nope")
-
-# capitals.update({"France" : "Europe"})
-# capitals.update({"Russia" : "Ukraine"})
-# capitals.pop("Japan")
-# capitals.popitem()
-# capitals.clear()
-
-# keys = capitals.keys()
-# print(keys)
-# for key in keys:
-#     print(key)
-
-# values = capitals.values()
-# print(values)
-# for value in values:
-#     print(value)
-
-# items = capitals.items() # Returns 2D lists of tuples
-# print(items)
-# for key, value in items:
-#     print(f"{key} : {value}")
+print("● ┌ ─ ┐ │ └ ┘")
 
 dice_art = {
     1:("┌───────┐",
@@ -68,4 +36,27 @@ dice_art = {
        "└───────┘")    
 }
 
-print(dice_art.get(1)[4],end = " \n")
+dice = []
+num_of_dice = int(input("Enter the number of dice: "))
+total = 0
+
+for num in range(num_of_dice):
+    dice.append(random.randint(1,6))
+
+print(dice)
+
+# for die in range(num_of_dice):
+#     for line in dice_art.get(dice[die]):
+#         print(line)
+
+for line in range(5):
+    for die in dice:
+        print("|",end="")
+        print(dice_art.get(die)[line], end = "")
+    print("|")
+
+for die in dice:
+    total += die
+
+print(dice)
+print(total)
