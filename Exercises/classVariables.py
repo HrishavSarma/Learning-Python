@@ -6,7 +6,7 @@
 
 class Student:
 
-    class_year = 2026
+    class_year = 2026 #these are class variables
     class_strength = 0
 
     def __init__(self, name, roll):
