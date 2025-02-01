@@ -1,4 +1,3 @@
-    if text_rect.centery >= 160:
-        velocity = -1
-    if text_rect.centery <=140:
-        velocity = +1
+    # if triggered:
+    #     text_rect.centery -= velocity
+    #     if text_rect.centery == text_pos-15:
