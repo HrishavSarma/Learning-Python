@@ -1,4 +1,4 @@
-# PyQt5 introduction
+# PyQt5 Buttons
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel)
 
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
                              "color: #f5f5f5;")
         
         # To make the application quit after 1 second
-        QTimer.singleShot(1000, QApplication.quit)
+        QTimer.singleShot(3000, QApplication.quit)
         
 
 

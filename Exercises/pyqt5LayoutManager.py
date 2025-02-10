@@ -1,4 +1,4 @@
-# PyQt5 introduction
+# PyQt5 LayoutManager
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, 
                              QWidget, QHBoxLayout, QVBoxLayout, QGridLayout)
