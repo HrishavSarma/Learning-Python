@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("stuffs/VictorPFP.png"))
         self.button = QPushButton("CLICK ME!", self)
         self.label1 = QLabel("HELLO!", self)
-        self.label2 = QLabel("", self)
+        self.label2 = QLabel("", self) #BACKGROUND
         self.initUI()
 
     def initUI(self):
@@ -41,9 +41,11 @@ class MainWindow(QMainWindow):
         # central_widget = QWidget()
         # self.setCentralWidget(central_widget)
         
+        #BACKGROUND
         self.label2.setStyleSheet("background-color: #4A5468")
         self.label2.setGeometry(0,0,500,500)
         self.label2.lower()
+
         # self.grid = QGridLayout()
         # self.grid.addWidget(self.label2,2,2)
         # # central_widget.setLayout(self.grid)
