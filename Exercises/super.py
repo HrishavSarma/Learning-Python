@@ -25,8 +25,9 @@ class Triangle(Shape):
         self.width = width
 
     def describe(self): # this method will override the parent method
-        super().describe()
         print(f"It is a triangle. The height and width is {self.height}cm and {self.width}cm")
+        super().describe()
+        
 
 
 circle = Circle(color = "Blue", is_filled = True, radius= 7)
