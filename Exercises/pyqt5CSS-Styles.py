@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
                             padding: 15px 75px;
                             margin: 25px;
                             border: 3px solid;
+                            border-color: black;
                             border-radius: 15px;
                             color: hsl(0, 0%, 0%)
                         }
