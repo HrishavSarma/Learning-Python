@@ -2,9 +2,9 @@ import sys
 import requests
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, 
                              QLineEdit, QPushButton, QVBoxLayout,
-                             QDesktopWidget)
+                             QDesktopWidget, QFontDatabase)
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QFontDatabase, QIcon
+from PyQt5.QtGui import QIcon
 
 class WeatherApp(QWidget):
     def __init__(self):
@@ -26,6 +26,11 @@ class WeatherApp(QWidget):
         self.setWindowTitle("My Weather App")
         self.setWindowIcon(QIcon("assets/weatherart.png"))
 
+        # Load custom fonts
+        font_database = QFontDatabase()
+        font_database.addApplicationFont("fonts/Poppins-Regular.ttf")
+        font_database.addApplicationFont("fonts/Montserrat-Regular.ttf")
+        font_database.addApplicationFont("fonts/Nunito-Regular.ttf")
 
         self.vbox = QVBoxLayout()
 
@@ -64,69 +69,82 @@ class WeatherApp(QWidget):
         self.labelback.setObjectName("labelback")
 
         self.setStyleSheet("""
-            QLabel, QPushButton{
-                            font-family: roboto;
-                           }
-            QLabel#city_label{
-                           font-family: roboto;
-                           font-size: 20px;
-                           font-weight: bold;
-                           color: hsl(207, 90%, 54%);
-                           background-color: hsl(205, 87%, 94%);
-                           padding: 10px;
-                           border-radius: 10px;
-                           }
-            QLineEdit{
-                           font-size: 20px;
-                           color: black;
-                           }
-            QLineEdit#city_input::placeholder-text{
-                           color: grey;
-                           }
-            QPushButton#get_weather_button{
-                           font-size: 20px;
-                           font-family: roboto;
-                           background-color: hsl(220, 17%, 60%);
-                           border: 3px solid;
-                           border-color: white;
-                           border-radius: 3px;
-                           }
-            QPushButton#get_weather_button:hover{
-                           background-color: hsl(220, 30%, 75%);
-                           border: 2px solid;
-                           border-color: white;
-                           }
-            QPushButton#get_weather_button:pressed{
-                           background-color: hsl(220, 17%, 40%);
-                           border: 2px solid;
-                           border-color: white;
-                           }
-            QLabel#temperature_label{
-                           font-size: 50px;
-                           }
-            QLabel#location_label{
-                           font-size: 50px;
-                           font-family: GoodDog Plain;
-                           }
-            QLabel#emoji_label{
-                           font-size: 100px;
-                           font-family: Segoe UI emoji;
-                           }
-            QLabel#description_label{
-                           font-size: 50px;↑
-                           }
+            QLabel, QPushButton {
+                font-family: 'Poppins', sans-serif;
+            }
+            QLabel#city_label {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 24px;
+                font-weight: bold;
+                color: #2196F3;
+                background-color: #E3F2FD;
+                padding: 10px;
+                border-radius: 10px;
+            }
+            QLineEdit {
+                font-family: 'Open Sans', sans-serif;
+                font-size: 18px;
+                color: #212121;
+                background-color: #FFFFFF;
+                border: 2px solid #BBDEFB;
+                border-radius: 5px;
+                padding: 5px;
+            }
+            QLineEdit::placeholder {
+                color: #757575;
+            }
+            QPushButton#get_weather_button {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 20px;
+                font-weight: bold;
+                color: #FFFFFF;
+                background-color: #2196F3;
+                border: 2px solid #2196F3;
+                border-radius: 10px;
+                padding: 10px;
+            }
+            QPushButton#get_weather_button:hover {
+                background-color: #1976D2;
+                border-color: #1976D2;
+            }
+            QPushButton#get_weather_button:pressed {
+                background-color: #0D47A1;
+                border-color: #0D47A1;
+            }
+            QLabel#temperature_label {
+                font-family: 'Poppins', sans-serif;
+                font-size: 50px;
+                color: #212121;
+            }
+            QLabel#location_label {
+                font-family: 'Montserrat', sans-serif;
+                font-size: 30px;
+                color: #2196F3;
+            }
+            QLabel#emoji_label {
+                font-family: 'Segoe UI Emoji', sans-serif;
+                font-size: 100px;
+                background-color: #F5F5F5;
+                border-radius: 20px;
+                padding: 10px;
+            }
+            QLabel#description_label {
+                font-family: 'Nunito', sans-serif;
+                font-size: 24px;
+                color: #757575;
+            }
         """)
 
         self.city_code_input.setPlaceholderText("ENTER COUNTRY CODE")
         self.city_input.setPlaceholderText("ENTER CITY ZIPCODE")
-        self.labelback.setStyleSheet("background-color: hsl(220, 17%, 35%)")
+        self.labelback.setStyleSheet("background-color: #E3F2FD;")
         self.labelback.lower()
 
         self.get_weather_button.clicked.connect(self.get_weather)
 
         self.resizeEvent(None)
 
-        self.resize(500,200)
+        self.resize(500, 200)
         self.center_window()
 
     def center_window(self):
@@ -141,7 +159,6 @@ class WeatherApp(QWidget):
         super().resizeEvent(event)
 
     def get_weather(self):
-        
         api_key = "abe2813e66b1a9127eec5d1327a02b23"
         city = self.city_input.text()
         city_code = self.city_code_input.text()
@@ -185,20 +202,16 @@ class WeatherApp(QWidget):
             self.display_error(f"Request Error:\n{req_error}")
         
     def display_error(self, message):
-
         self.temperature_label.show()
         self.emoji_label.hide()
         self.location_label.hide()
         self.description_label.hide()
 
-        self.temperature_label.setStyleSheet("font-size: 30px;"
-                                             "color: red;")
+        self.temperature_label.setStyleSheet("font-size: 30px; color: #FF5252;")
         self.temperature_label.setText(message)
-        
-        self.vbox.update()
-                
-        self.resize(500,200)
 
+        self.vbox.update()
+        self.resize(500, 200)
         self.center_window()
 
     def display_weather(self, data):
@@ -213,7 +226,7 @@ class WeatherApp(QWidget):
         weather_id = data["weather"][0]["id"]
 
         self.temperature_label.setStyleSheet(
-            "color: black;"
+            "color: #212121;"
             "font-size: 50px;"
         )
 
@@ -227,24 +240,23 @@ class WeatherApp(QWidget):
         self.location_label.show()
         self.description_label.show()
 
-        self.resize(500,500)
-
+        self.vbox.update()
+        self.resize(500, 500)
         self.center_window()
 
     @staticmethod
     def show_emoji(weather_id):
-        
-        if 200 <= weather_id <=232:
+        if 200 <= weather_id <= 232:
             return "⛈"
-        elif 300 <= weather_id <=321:
+        elif 300 <= weather_id <= 321:
             return "☔"
-        elif 500 <= weather_id <=531:
+        elif 500 <= weather_id <= 531:
             return "🌧"
-        elif 600 <= weather_id <=622:
+        elif 600 <= weather_id <= 622:
             return "🌨"
         elif weather_id == 800:
             return "☁"
-        elif 701 <= weather_id <=771:
+        elif 701 <= weather_id <= 771:
             return "🤧"
         elif weather_id == 781:
             return "🌪"
