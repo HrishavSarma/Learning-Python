@@ -2,9 +2,10 @@ import sys
 import requests
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, 
                              QLineEdit, QPushButton, QVBoxLayout,
-                             QDesktopWidget, QFontDatabase)
+                             QDesktopWidget)
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QFont, QFontDatabase, QIcon
+from datetime import datetime, timedelta
 
 class WeatherApp(QWidget):
     def __init__(self):
@@ -18,6 +19,7 @@ class WeatherApp(QWidget):
         self.emoji_label = QLabel(self)
         self.description_label = QLabel(self)
         self.location_label = QLabel(self)
+        self.time_label = QLabel(self)  # New label for time
         self.labelback = QLabel("", self)
 
         self.initUI()
@@ -25,12 +27,6 @@ class WeatherApp(QWidget):
     def initUI(self):
         self.setWindowTitle("My Weather App")
         self.setWindowIcon(QIcon("assets/weatherart.png"))
-
-        # Load custom fonts
-        font_database = QFontDatabase()
-        font_database.addApplicationFont("fonts/Poppins-Regular.ttf")
-        font_database.addApplicationFont("fonts/Montserrat-Regular.ttf")
-        font_database.addApplicationFont("fonts/Nunito-Regular.ttf")
 
         self.vbox = QVBoxLayout()
 
@@ -40,13 +36,15 @@ class WeatherApp(QWidget):
         self.vbox.addWidget(self.get_weather_button)
         self.vbox.addWidget(self.temperature_label)
         self.vbox.addWidget(self.emoji_label)
-        self.vbox.addWidget(self.location_label)
         self.vbox.addWidget(self.description_label)
+        self.vbox.addWidget(self.location_label)
+        self.vbox.addWidget(self.time_label)
 
         self.temperature_label.hide()
         self.emoji_label.hide()
         self.location_label.hide()
         self.description_label.hide()
+        self.time_label.hide()  # Hide time label initially
 
         self.setLayout(self.vbox)
 
@@ -57,6 +55,7 @@ class WeatherApp(QWidget):
         self.emoji_label.setAlignment(Qt.AlignCenter)
         self.description_label.setAlignment(Qt.AlignCenter)
         self.location_label.setAlignment(Qt.AlignCenter)
+        self.time_label.setAlignment(Qt.AlignCenter)  # Center-align time label
 
         self.city_label.setObjectName("city_label")
         self.city_input.setObjectName("city_input")
@@ -66,78 +65,84 @@ class WeatherApp(QWidget):
         self.emoji_label.setObjectName("emoji_label")
         self.description_label.setObjectName("description_label")
         self.location_label.setObjectName("location_label")
+        self.time_label.setObjectName("time_label")  # Set object name for time label
         self.labelback.setObjectName("labelback")
 
         self.setStyleSheet("""
-            QLabel, QPushButton {
-                font-family: 'Poppins', sans-serif;
-            }
-            QLabel#city_label {
-                font-family: 'Montserrat', sans-serif;
-                font-size: 24px;
-                font-weight: bold;
-                color: #2196F3;
-                background-color: #E3F2FD;
-                padding: 10px;
-                border-radius: 10px;
-            }
-            QLineEdit {
-                font-family: 'Open Sans', sans-serif;
-                font-size: 18px;
-                color: #212121;
-                background-color: #FFFFFF;
-                border: 2px solid #BBDEFB;
-                border-radius: 5px;
-                padding: 5px;
-            }
-            QLineEdit::placeholder {
-                color: #757575;
-            }
-            QPushButton#get_weather_button {
-                font-family: 'Montserrat', sans-serif;
-                font-size: 20px;
-                font-weight: bold;
-                color: #FFFFFF;
-                background-color: #2196F3;
-                border: 2px solid #2196F3;
-                border-radius: 10px;
-                padding: 10px;
-            }
-            QPushButton#get_weather_button:hover {
-                background-color: #1976D2;
-                border-color: #1976D2;
-            }
-            QPushButton#get_weather_button:pressed {
-                background-color: #0D47A1;
-                border-color: #0D47A1;
-            }
-            QLabel#temperature_label {
-                font-family: 'Poppins', sans-serif;
-                font-size: 50px;
-                color: #212121;
-            }
-            QLabel#location_label {
-                font-family: 'Montserrat', sans-serif;
-                font-size: 30px;
-                color: #2196F3;
-            }
-            QLabel#emoji_label {
-                font-family: 'Segoe UI Emoji', sans-serif;
-                font-size: 100px;
-                background-color: #F5F5F5;
-                border-radius: 20px;
-                padding: 10px;
-            }
-            QLabel#description_label {
-                font-family: 'Nunito', sans-serif;
-                font-size: 24px;
-                color: #757575;
-            }
+            QLabel, QPushButton{
+                            font-family: poppins;
+                           }
+            QLabel#city_label{
+                           font-family: montserrat;
+                           font-size: 24px;
+                           font-weight: bold;
+                           color: hsl(207, 90%, 54%);
+                           background-color: hsl(205, 87%, 94%);
+                           padding: 10px;
+                           border-radius: 10px;
+                           }
+            QLineEdit{
+                           font-family: open sans;
+                           font-size: 18px;
+                           color: hsl(0, 0%, 13%);
+                           background-color: hsl(0, 0%, 100%);
+                           border: 2px solid hsl(207, 89%, 86%);
+                           border-radius: 5px;
+                           padding: 5px;
+                           }
+            QLineEdit#city_input::placeholder-text{
+                           color: hsl(0, 0%, 46%);
+                           }
+            QPushButton#get_weather_button{
+                           font-size: 20px;
+                           font-family: montserrat;
+                           font-weight: bold;
+                           color: hsl(0, 0%, 100%);
+                           background-color: hsl(207, 90%, 54%);
+                           border: 2px solid hsl(207, 90%, 54%);
+                           border-radius: 10px;
+                           padding: 10px;
+                           }
+            QPushButton#get_weather_button:hover{
+                           background-color: hsl(210, 79%, 46%);
+                           border-color: hsl(210, 79%, 46%);
+                           }
+            QPushButton#get_weather_button:pressed{
+                           background-color: hsl(216, 85%, 34%);
+                           border-color: hsl(216, 85%, 34%);
+                           }
+            QLabel#temperature_label{
+                           font-family: poppins;
+                           font-size: 50px;
+                           color: hsl(0, 0%, 13%);
+                           }
+            QLabel#location_label{
+                           font-size: 30px;
+                           font-family: montserrat;
+                           color: hsl(207, 90%, 54%);
+                           }
+            QLabel#emoji_label{
+                           font-size: 100px;
+                           font-family: Segoe UI emoji;
+                           border-radius: 20px;
+                           padding: 10px;
+                           }
+            QLabel#description_label{
+                           font-family: nunito sans;
+                           font-size: 24px;
+                           color: hsl(0, 0%, 46%);
+                           }
+            QLabel#time_label {
+                           font-family: nunito sans;
+                           font-size: 30px;
+                           font-weight: bold;
+                           color: hsl(0, 0%, 10%);
+                           }
         """)
 
         self.city_code_input.setPlaceholderText("ENTER COUNTRY CODE")
         self.city_input.setPlaceholderText("ENTER CITY ZIPCODE")
-        self.labelback.setStyleSheet("background-color: #E3F2FD;")
+        self.labelback.setStyleSheet("background-color: hsl(205, 87%, 94%)")
         self.labelback.lower()
 
         self.get_weather_button.clicked.connect(self.get_weather)
@@ -159,18 +164,22 @@ class WeatherApp(QWidget):
         super().resizeEvent(event)
 
     def get_weather(self):
-        api_key = "abe2813e66b1a9127eec5d1327a02b23"
+        api_key = "abe2813e66b1a9127eec5d1327a02b23"  # OpenWeatherMap API key
         city = self.city_input.text()
         city_code = self.city_code_input.text()
         url = f"https://api.openweathermap.org/data/2.5/weather?zip={city},{city_code}&appid={api_key}"
 
         try:
+            # Fetch weather data
             response = requests.get(url)
             response.raise_for_status()
             data = response.json()
 
             if data["cod"] == 200:
                 self.display_weather(data)
+
+                # Display local time
+                self.display_local_time(data["timezone"])
 
         except requests.exceptions.HTTPError as http_error:
             match response.status_code:
@@ -206,8 +215,9 @@ class WeatherApp(QWidget):
         self.emoji_label.hide()
         self.location_label.hide()
         self.description_label.hide()
+        self.time_label.hide()  # Hide time label on error
 
-        self.temperature_label.setStyleSheet("font-size: 30px; color: #FF5252;")
+        self.temperature_label.setStyleSheet("font-size: 30px; color: hsl(0, 100%, 66%);")
         self.temperature_label.setText(message)
 
         self.vbox.update()
@@ -226,7 +236,7 @@ class WeatherApp(QWidget):
         weather_id = data["weather"][0]["id"]
 
         self.temperature_label.setStyleSheet(
-            "color: #212121;"
+            "color: hsl(0, 0%, 13%);"
             "font-size: 50px;"
         )
 
@@ -240,28 +250,128 @@ class WeatherApp(QWidget):
         self.location_label.show()
         self.description_label.show()
 
-        self.vbox.update()
         self.resize(500, 500)
         self.center_window()
 
+    def display_local_time(self, timezone_offset):
+        """Calculate and display the local time using the timezone offset."""
+        try:
+            # Get current UTC time
+            utc_time = datetime.utcnow()
+            # Calculate local time using the timezone offset (in seconds)
+            local_time = utc_time + timedelta(seconds=timezone_offset)
+            # Format the time
+            formatted_time = local_time.strftime("%H:%M")
+            # Display the time
+            self.time_label.setText(f"{formatted_time}")
+            self.time_label.show()
+        except Exception as e:
+            self.time_label.setText("Failed to fetch time.")
+            self.time_label.show()
+
     @staticmethod
     def show_emoji(weather_id):
-        if 200 <= weather_id <= 232:
-            return "⛈"
-        elif 300 <= weather_id <= 321:
-            return "☔"
-        elif 500 <= weather_id <= 531:
-            return "🌧"
-        elif 600 <= weather_id <= 622:
-            return "🌨"
-        elif weather_id == 800:
-            return "☁"
-        elif 701 <= weather_id <= 771:
-            return "🤧"
-        elif weather_id == 781:
-            return "🌪"
+        if 200 <= weather_id <= 232:  # Thunderstorm
+            if weather_id == 200:
+                return "🌩"  # Thunderstorm with light rain
+            elif weather_id == 201:
+                return "⛈"  # Thunderstorm with rain
+            elif weather_id == 202:
+                return "🌧⛈"  # Thunderstorm with heavy rain
+            elif 210 <= weather_id <= 212:
+                return "🌩"  # Light/Heavy Thunderstorm
+            elif weather_id == 221:
+                return "🌩"  # Ragged Thunderstorm
+            elif 230 <= weather_id <= 232:
+                return "⛈🌧"  # Thunderstorm with drizzle
+            else:
+                return "⛈"  # Default Thunderstorm
+
+        elif 300 <= weather_id <= 321:  # Drizzle
+            if weather_id == 300:
+                return "🌦"  # Light intensity drizzle
+            elif weather_id == 301:
+                return "🌧"  # Drizzle
+            elif weather_id == 302:
+                return "🌧🌧"  # Heavy intensity drizzle
+            elif 310 <= weather_id <= 314:
+                return "🌧"  # Drizzle rain
+            elif weather_id == 321:
+                return "🌧"  # Shower drizzle
+            else:
+                return "🌧"  # Default Drizzle
+
+        elif 500 <= weather_id <= 531:  # Rain
+            if weather_id == 500:
+                return "🌦"  # Light rain
+            elif weather_id == 501:
+                return "🌧"  # Moderate rain
+            elif 502 <= weather_id <= 504:
+                return "🌧🌧"  # Heavy/Extreme rain
+            elif weather_id == 511:
+                return "🌨"  # Freezing rain
+            elif 520 <= weather_id <= 531:
+                return "🌧"  # Shower rain
+            else:
+                return "🌧"  # Default Rain
+
+        elif 600 <= weather_id <= 622:  # Snow
+            if weather_id == 600:
+                return "🌨"  # Light snow
+            elif weather_id == 601:
+                return "❄️"  # Snow
+            elif weather_id == 602:
+                return "❄️❄️"  # Heavy snow
+            elif 611 <= weather_id <= 613:
+                return "🌨"  # Sleet
+            elif 615 <= weather_id <= 616:
+                return "🌨🌧"  # Rain and snow
+            elif 620 <= weather_id <= 622:
+                return "🌨"  # Shower snow
+            else:
+                return "❄️"  # Default Snow
+
+        elif 701 <= weather_id <= 781:  # Atmosphere (Mist, Smoke, Haze, etc.)
+            if weather_id == 701:
+                return "🌫"  # Mist
+            elif weather_id == 711:
+                return "💨"  # Smoke
+            elif weather_id == 721:
+                return "🌫"  # Haze
+            elif weather_id == 731:
+                return "🌪"  # Sand/Dust whirls
+            elif weather_id == 741:
+                return "🌁"  # Fog
+            elif weather_id == 751:
+                return "🏜"  # Sand
+            elif weather_id == 761:
+                return "🌪"  # Dust
+            elif weather_id == 762:
+                return "🌋"  # Volcanic ash
+            elif weather_id == 771:
+                return "💨"  # Squalls
+            elif weather_id == 781:
+                return "🌪"  # Tornado
+            else:
+                return "🌫"  # Default Atmosphere
+
+        elif weather_id == 800:  # Clear
+            return "☀️"  # Clear sky
+
+        elif 801 <= weather_id <= 804:  # Clouds
+            if weather_id == 801:
+                return "🌤"  # Few clouds
+            elif weather_id == 802:
+                return "⛅️"  # Scattered clouds
+            elif weather_id == 803:
+                return "🌥"  # Broken clouds
+            elif weather_id == 804:
+                return "☁️"  # Overcast clouds
+            else:
+                return "☁️"  # Default Clouds
+
         else:
-            return ":("
+            return ":("  # Unknown weather
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
